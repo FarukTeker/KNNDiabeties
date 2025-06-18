@@ -31,11 +31,15 @@ def main():
     ])
     param_grid = {
         'knn__n_neighbors': list(range(1, 31, 2)),
-        'knn__weights': ['uniform', 'distance']
+        'knn__weights': ['uniform', 'distance'],
+        'knn__metric': ['euclidean', 'manhattan', 'minkowski'],
+        'knn__p': [1, 2],
+        'knn__algorithm': ['auto', 'ball_tree', 'kd_tree']
     }
-    search = GridSearchCV(pipeline, param_grid, cv=5)
+    search = GridSearchCV(pipeline, param_grid, cv=5, n_jobs=-1)
     search.fit(X_train, y_train)
     print('Best parameters:', search.best_params_)
+    print('Best CV accuracy:', search.best_score_)
     y_pred = search.predict(X_test)
     acc = accuracy_score(y_test, y_pred)
     print('Test accuracy:', acc)
